@@ -1,14 +1,13 @@
 package com.example.seba.astroweather;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.SystemClock;
+
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -22,63 +21,98 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.concurrent.TimeUnit;
-
-
 public class MainActivity extends AppCompatActivity {
-    Thread t;
+    static SharedPreferences sharedPrefs;
+    static TextView longitude;
+    static TextView latitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Configuration configInfo = getResources().getConfiguration();
+        sharedPrefs= PreferenceManager.getDefaultSharedPreferences(this);
 
 
         if(configInfo.orientation == Configuration.ORIENTATION_PORTRAIT && !isTablet(getBaseContext())) {
             setContentView(R.layout.activity_portrait);
-            ViewPager pager = (ViewPager) findViewById(R.id.container);
+            ViewPager pager = findViewById(R.id.container);
             pager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager()));
             TabLayout tabLayout = findViewById(R.id.tabs);
-
+            latitude=findViewById(R.id.latitude);
+            longitude=findViewById(R.id.longitude);
+            latitude.setText(" latitude: "+sharedPrefs.getString("latitude", "0"));
+            longitude.setText("longitude: "+sharedPrefs.getString("longitude", "0"));
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(pager));
         }
-        else if(configInfo.orientation == Configuration.ORIENTATION_LANDSCAPE || isTablet(getBaseContext())) {
+        else if(configInfo.orientation == Configuration.ORIENTATION_LANDSCAPE && !isTablet(getBaseContext())) {
             setContentView(R.layout.activity_landscape);
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
             Fragment sunFragment=SunFragment.newInstance();
             Fragment moonFragment=MoonFragment.newInstance();
+            latitude=findViewById(R.id.latitude);
+            longitude=findViewById(R.id.longitude);
+            latitude.setText(" latitude: "+sharedPrefs.getString("latitude", "0"));
+            longitude.setText("longitude: "+sharedPrefs.getString("longitude", "0"));
             fragmentTransaction.replace(R.id.sunTest, sunFragment);
             fragmentTransaction.replace(R.id.moonTest, moonFragment);
             fragmentTransaction.commit();
-
         }
+        else if(configInfo.orientation == Configuration.ORIENTATION_PORTRAIT && isTablet(getBaseContext())) {
+            setContentView(R.layout.activity_tablet_portrait);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+            Fragment sunFragment=SunFragment.newInstance();
+            Fragment moonFragment=MoonFragment.newInstance();
+            Toolbar toolbar=findViewById(R.id.toolbar);
+            toolbar.setTitle(toolbar.getTitle()+" - tablet v.");
+            latitude=findViewById(R.id.latitude);
+            longitude=findViewById(R.id.longitude);
+            latitude.setText(" latitude: "+sharedPrefs.getString("latitude", "0"));
+            longitude.setText("longitude: "+sharedPrefs.getString("longitude", "0"));
+            fragmentTransaction.replace(R.id.sunTest, sunFragment);
+            fragmentTransaction.replace(R.id.moonTest, moonFragment);
+            fragmentTransaction.commit();
+        }
+        else if(configInfo.orientation == Configuration.ORIENTATION_LANDSCAPE && isTablet(getBaseContext())){
+            setContentView(R.layout.activity_tablet_landscape);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+            Fragment sunFragment=SunFragment.newInstance();
+            Fragment moonFragment=MoonFragment.newInstance();
+            Toolbar toolbar=findViewById(R.id.toolbar);
+            toolbar.setTitle(toolbar.getTitle()+" - tablet v.");
+            latitude=findViewById(R.id.latitude);
+            longitude=findViewById(R.id.longitude);
+            latitude.setText(" latitude: "+sharedPrefs.getString("latitude", "0"));
+            longitude.setText("longitude: "+sharedPrefs.getString("longitude", "0"));
+            fragmentTransaction.replace(R.id.sunTest, sunFragment);
+            fragmentTransaction.replace(R.id.moonTest, moonFragment);
+            fragmentTransaction.commit();
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //refresh dla danego fragmentu
-                Snackbar.make(view, "Update widokow", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                //tabLayout.getSelectedTabPosition()
+                SunFragment.updatePrefsAndRefresh();
+                MoonFragment.updatePrefsAndRefresh();
             }
         });
-        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-
-
+    }
+    public static void updateCoordinates(){
+        latitude.setText(" latitude: "+sharedPrefs.getString("latitude", "0"));
+        longitude.setText("longitude: "+sharedPrefs.getString("longitude", "0"));
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

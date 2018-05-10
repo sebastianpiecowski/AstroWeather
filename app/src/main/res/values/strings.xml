@@ -6,4 +6,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="autoRefresh">true</string>
     <string name="refreshRate">60000</string>
+    <string name="time">Time:</string>
+    <string name="loc">Location:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
 </resources>

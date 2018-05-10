@@ -4,20 +4,13 @@
         android:title="Sync Information"
         android:key="sync_category">
 
-        <CheckBoxPreference
-            android:key="perform_sync"
-            android:summary="Enable or disable refresh"
-            android:title="Enable Auto Refresh"
-            android:defaultValue="@string/autoRefresh"/>
-
         <ListPreference
             android:key="sync_interval"
             android:title="Sync interval"
             android:summary="Define how often sync will be performed"
             android:defaultValue="@string/refreshRate"
             android:entries="@array/updateInterval"
-            android:entryValues="@array/updateIntervalValues"
-            android:dependency="perform_sync"/>
+            android:entryValues="@array/updateIntervalValues" />
         <EditTextPreference android:title="Location: longitude"
             android:key="longitude"
             android:summary="Location longitude"></EditTextPreference>
