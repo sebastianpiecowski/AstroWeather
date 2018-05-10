@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Sync Information"
+        android:key="sync_category">
+
+        <CheckBoxPreference
+            android:key="perform_sync"
+            android:summary="Enable or disable refresh"
+            android:title="Enable Auto Refresh"
+            android:defaultValue="@string/autoRefresh"/>
+
+        <ListPreference
+            android:key="sync_interval"
+            android:title="Sync interval"
+            android:summary="Define how often sync will be performed"
+            android:defaultValue="@string/refreshRate"
+            android:entries="@array/updateInterval"
+            android:entryValues="@array/updateIntervalValues"
+            android:dependency="perform_sync"/>
+        <EditTextPreference android:title="Location: longitude"
+            android:key="longitude"
+            android:summary="Location longitude"></EditTextPreference>
+        <EditTextPreference android:title="Location: latitude"
+            android:key="latitude"
+            android:summary="Location latitude"></EditTextPreference>
+
+    </PreferenceCategory>
+</PreferenceScreen>
