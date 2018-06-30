@@ -3,11 +3,27 @@
     <string name="tab_text_1">Sun</string>
     <string name="tab_text_2">Moon</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="autoRefresh">true</string>
     <string name="refreshRate">60000</string>
     <string name="time">Time:</string>
     <string name="loc">Location:</string>
     <string name="latitude">Latitude:</string>
     <string name="longitude">Longitude:</string>
+    <string name="exit">Exit</string>
+    <string name="astro1">Astro 1</string>
+    <string name="astro2">Astro 2</string>
+
+    <string name="city">City</string>
+    <string name="temp">C</string>
+    <string name="condition">Condition:</string>
+    <string name="humidity">Humidity:</string>
+    <string name="pressure">Pressure:</string>
+    <string name="windspeed">Wind Speed:</string>
+    <string name="visibility">Visibility:</string>
+    <string name="date">Date:</string>
+    <string name="day">Day:</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="today">Today</string>
+    <string name="forecast">Forecast</string>
 </resources>

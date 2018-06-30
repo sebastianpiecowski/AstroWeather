@@ -1,43 +1,41 @@
-package com.example.seba.astroweather;
+package com.example.seba.astroweather.fragment;
 
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
+import com.example.seba.astroweather.R;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 
-public class MoonFragment extends Fragment {
+public class SunFragment extends Fragment {
     static Calendar calendar= Calendar.getInstance();
-    static TextView moonrise;
-    static TextView harvest;
-    static TextView phase;
-    static TextView synodic;
+    static TextView sunrise;
+    static TextView sundown;
+    static TextView twilight;
+    static ImageView image;
     static String syncInterval;
     static SharedPreferences preferences;
     static AstroDateTime datetime;
-    static MoonFragment newInstance() {
-        MoonFragment f = new MoonFragment();
-        return f;
+    public static SunFragment newInstance() {
+            return new SunFragment();
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.moon_main, container, false);
-        moonrise = view.findViewById(R.id.moonrise);
-        harvest=view.findViewById(R.id.harvestMoon);
-        phase=view.findViewById(R.id.phaseMoon);
-        synodic=view.findViewById(R.id.daySynodic);
+        View view =inflater.inflate(R.layout.sun_main, container, false);
 
+        image=view.findViewById(R.id.imageView);
+        sunrise=view.findViewById(R.id.sunrise);
+        sundown=view.findViewById(R.id.sundown);
+        twilight=view.findViewById(R.id.twilight);
         preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         datetime=new AstroDateTime();
         fetchInter();
@@ -66,37 +64,30 @@ public class MoonFragment extends Fragment {
         }.start();
         return view;
     }
-
     public static void updatePrefsAndRefresh(){
         fetchInter();
         updateValues();
     }
+
     private static void updateValues(){
         double latitude=Double.parseDouble(preferences.getString("latitude", "0"));
         double longitude=Double.parseDouble(preferences.getString("longitude", "0"));
         setAstroDateTime();
-        DecimalFormat dec = new DecimalFormat("#0.00");
+
         AstroCalculator astroCalculator=new AstroCalculator(datetime, new AstroCalculator.Location(latitude,longitude));
-        String rise="rise:"+formatAstroDateTime(astroCalculator.getMoonInfo().getMoonrise().toString())+"   down:"+formatAstroDateTime(astroCalculator.getMoonInfo().getMoonset().toString());
-        String newMoon=formatAstroGetDate(astroCalculator.getMoonInfo().getNextNewMoon().toString());
-        String har=formatAstroGetDate(astroCalculator.getMoonInfo().getNextFullMoon().toString());
-        String ph=dec.format(astroCalculator.getMoonInfo().getIllumination())+"%";
-        String age=dec.format(astroCalculator.getMoonInfo().getAge());
-        moonrise.setText(rise);
-        harvest.setText("New moon: "+newMoon+"\nFull moon: "+har);
-        phase.setText(ph);
-        synodic.setText(age);
-
-
+        String rise=formatAstroDateTime(astroCalculator.getSunInfo().getSunrise().toString())+"\n azimuth: "+astroCalculator.getSunInfo().getAzimuthRise();
+        String down=formatAstroDateTime(astroCalculator.getSunInfo().getSunset().toString())+"\n azimuth: "+astroCalculator.getSunInfo().getAzimuthSet();
+        String dusk=formatAstroDateTime(astroCalculator.getSunInfo().getTwilightEvening().toString());
+        String daylight=formatAstroDateTime(astroCalculator.getSunInfo().getTwilightMorning().toString());
+        sunrise.setText(rise);
+        sundown.setText(down);
+        twilight.setText("dusk:"+ dusk+"\ndaylight:"+daylight);
     }
     private static void fetchInter(){
         syncInterval=preferences.getString("sync_interval", "60000");
     }
     private static String formatAstroDateTime(String dateString){
         return dateString.substring(10,19);
-    }
-    private static String formatAstroGetDate(String dateString){
-        return dateString.substring(0,10);
     }
     private static void setAstroDateTime(){
         datetime.setYear(calendar.get(Calendar.YEAR));
